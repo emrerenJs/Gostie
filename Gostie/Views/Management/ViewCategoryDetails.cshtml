@@ -1,0 +1,44 @@
+﻿@model Gostie.Models.Panel.CategoryUpdateModel
+@{
+    ViewData["Title"] = "ViewCategoryDetails";
+    Layout = "_PanelLayout";
+}
+
+<div class="container">
+    <div class="card text-center">
+        <div class="card-body" id="UpdateCategory">
+            <h5 class="card-title">Yeni Kategori</h5>
+            <div class="row justify-content-center">
+                <form asp-controller="Management" asp-action="UpdateCategory" method="post" enctype="multipart/form-data">
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <label>Kategori ismi:</label>
+                            <input type="hidden" value="@Model.category.CategoryID" asp-for="category.CategoryID" />
+                            <input class="form-control" type="text" asp-for="category.CategoryName" placeholder="Vücut Geliştirme.." />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Resim:</label><br />
+                        <img src="~/images/categories/@Model.category.Picture" id="CategoryUpdatedPreviewImage" width="200" height="200" /><br /><br />
+                        <input class="form-control" type="file" id="CategoryUpdatedImage" name="CategoryUpdatedImage" asp-for="category.Picture" />
+                    </div>
+                    <div class="form-group">
+                        <label>Açıklama:</label>
+                        <textarea rows="3" class="form-control" asp-for="category.Description" placeholder="Kategori hakkında birşeyler.."></textarea>
+                    </div>
+                    @if(ViewBag.error != "")
+                    {
+                        <div class="form-group">
+                            <label>@ViewBag.error</label>
+                        </div>
+                    }
+                    <button type="submit" class="btn btn-primary" />Kaydet</button>
+                </form>
+            </div>
+            <form method="post" asp-action="DeleteCategory" asp-controller="Management">
+                <input type="hidden" asp-for="category.CategoryID" value="@Model.category.CategoryID" />
+                <button type="submit" class="btn btn-danger mt-2">&nbsp&nbspSil&nbsp&nbsp</button>
+            </form>
+        </div>
+    </div>
+</div>

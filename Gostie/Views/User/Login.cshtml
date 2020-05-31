@@ -1,0 +1,45 @@
+﻿@model Gostie.Models.User.LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+    Layout = "_UserLayout";
+}
+    <div class="login-layout">
+        <div class="login-page shadow">
+            <div class="login-header">
+                <h3>Hoş Geldiniz!</h3>
+            </div>
+            <hr />
+            <div class="login-container mb-3">
+                <form method="post" asp-action="Login" asp-controller="User">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Kullanıcı Adı</label>
+                        <input type="text" class="form-control" asp-for="UserName" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Kullanıcı Adı">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Parola</label>
+                        <input type="password" class="form-control" asp-for="Password" id="exampleInputPassword1" placeholder="Parola">
+                    </div>
+                    <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                        <label class="form-check-label" for="exampleCheck1">Beni hatırla</label>
+                    </div>
+                    <div class="form-group">
+                        @if (ViewBag.message != null)
+                        {
+                            <div>@ViewBag.message</div>
+                        }
+                        <div asp-validation-summary="ModelOnly"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Giriş</button>
+                </form>
+            </div>
+            <hr />
+            <div class="login-footer">
+                <div class="login-buttons mb-2">
+                    <a href="@Url.Action("Register","User")" class="btn btn-outline-primary text-primary">Kayıt Ol</a>
+                </div>
+                <!--a href="@Url.Action("ForgotPassword","User")" class="text-primary" style="font-size:14px">Şifreni mi unuttun?</a-->
+            </div>
+        </div>
+    </div>
+

@@ -1,0 +1,29 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>stat404</title>
+    <link rel="stylesheet" href="~/css/404.css"/>
+</head>
+<body>
+    <div style="width:100%; display:flex; justify-content:center">
+        <img src="~/images/assets/logo.png" width="200" height="100" />
+    </div>
+    <h1>Birşeyler ters gitti..</h1>
+    <p class="zoom-area"> Böyle bir sayfa yok veya bu sayfaya erişiminiz yok.. </p>
+    <section class="error-container">
+        <span>4</span>
+        <span><span class="screen-reader-text">0</span></span>
+        <span>4</span>
+    </section>
+    <div class="link-container">
+        <a target="_blank" href="@Url.Action("Index","Home")" class="more-link">Beni buradan çıkar</a>
+    </div>
+</body>
+</html>

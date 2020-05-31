@@ -1,0 +1,149 @@
+﻿@model Gostie.Models.Panel.OrderNOrderedModel 
+@{
+    ViewData["Title"] = "SaleDetails";
+    Layout = "_PanelLayout";
+    int q = 0;
+}
+
+<div class="container">
+    <div class="row" style="border-top:10px solid rgb(49, 43, 144); border-bottom:10px solid rgb(49, 43, 144);">
+        <div class="col-lg-6 p-3">
+            <div class="row">
+                <div class="col-lg-6">
+                    <label>Alıcı:</label>
+                </div>
+                <div class="col-lg-6">
+                    @Model.Customer.FirstName @Model.Customer.LastName
+                </div>
+                <div class="col-lg-6">
+                    <label>Adres:</label>
+                </div>
+                <div class="col-lg-6">
+                    @Model.Customer.Adress1
+                </div>
+                <div class="col-lg-6">
+                    <label>Sipariş Tarihi:</label>
+                </div>
+                <div class="col-lg-6">
+                    @Model.Order.OrderDate
+                </div>
+                <div class="col-lg-6">
+                    <label>Durum:</label>
+                </div>
+                <div class="col-lg-6">
+                    @Model.Status.Status
+                </div>
+                @if (Model.Status.ShippedStatusID != 1)
+                {
+                    <div class="col-lg-6">
+                        <label>Kargo Firması:</label>
+                    </div>
+                    <div class="col-lg-6">
+                        @Model.Shipper.CompanyName
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-lg-6 p-3">
+            <form class="form-group" method="post" asp-action="UpdateOrder" asp-controller="Management">
+                <input type="hidden" name="orderid" value="@Model.Order.OrderID" />
+                @if (Model.Status.ShippedStatusID == 1)
+                {
+                    <select class="form-control mb-3" asp-for="Shipper.ShipperID" asp-items="Model.Shippers"></select>
+                    <textarea name="description" class="form-control" rows="3">
+
+                </textarea>
+                    <button type="submit" value="1" name="status" class="btn btn-success mt-3">
+                        Kargola
+                    </button>
+                    <button type="submit" value="0" name="status" class="btn btn-danger mt-3">
+                        İptal
+                    </button>
+                }
+                else if(Model.Status.ShippedStatusID == 2)
+                {
+                    <button type="submit" value="2" name="status" class="btn btn-success mt-3">
+                        Teslimatı onayla
+                    </button>
+                }
+            </form>
+
+        </div>
+    </div>
+    <div class="content" style="border-bottom:10px solid rgb(49, 43, 144);">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Ürün Numarası</th>
+                    <th scope="col">Ürün Adı</th>
+                    <th scope="col">Ürün Açıklaması</th>
+                    <th scope="col">Ürün Adedi</th>
+                    <th scope="col">Ürün Fiyatı</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ int totalPrice = 0;}
+                @foreach (var item in Model.Products)
+                {
+                <tr>
+                    <th scope="row">@item.ProductID</th>
+                    <td>@item.Name</td>
+                    <td>@item.Description</td>
+                    <td>@Model.Ordereds[q].Count</td>
+                    @if (item.Discount > 0)
+                    {
+                    <td style="display:flex; justify-content:space-between">
+                        @Convert.ToInt32(item.Price - item.Price * item.Discount / 100)
+                        <p style="text-decoration-line:line-through;">@item.Price</p>
+                    </td>
+                    }
+                    else
+                    {
+                        <td>@item.Price</td>
+                    }
+                    @{
+                        if (item.Discount > 0)
+                            totalPrice += Convert.ToInt32(item.Price - item.Price * item.Discount / 100) * Model.Ordereds[q].Count;
+                        else
+                            totalPrice += item.Price * Model.Ordereds[q].Count;
+                    }
+                </tr>
+                <div>
+                    @{q++;}
+                </div>
+                }
+                <tr>
+                    <th scope="row">
+                        <label>Toplam Fiyat</label>
+                    </th>
+                    <th scope="row">-</th>
+                    <th scope="row">-</th>
+                    <th scope="row">-</th>
+                    <th scope="row">@totalPrice</th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h1>Şikayetler</h1>
+        </div>
+    </div>
+    @foreach(var item in Model.Complaints)
+    {
+     <div class="card">
+         <div class="card-header">
+             <p class="">@item.ComplaintHeader</p>
+         </div>
+         <div class="card-body">
+             @item.ComplaintDescription<br />
+             <form method="post" asp-action="DeleteComplaint" asp-controller="Management">
+                 <input type="hidden" value="@item.ComplaintID" name="complaintid"/>
+                 <button class="btn btn-danger">
+                     Sorun çözüldü
+                 </button>
+             </form>
+         </div>
+    </div>
+    }
+</div>

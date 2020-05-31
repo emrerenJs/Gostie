@@ -1,0 +1,62 @@
+﻿@model Gostie.Models.Home.HomeProductViewModel
+@{
+    ViewData["Title"] = "Products";
+    Layout = "_HomeLayout";
+    string Header = Model.category is null ? Model.Key : Model.category.CategoryName.ToUpper();
+    int price = 0;
+}
+<div class="container">
+    <div class="card text-center">
+        <div class="card-header">
+            <h1>@Header</h1>
+            <h5 class="text-primary font-weight-bolder">
+                (@Model.Products.Count adet ürün listelendi)
+            </h5>
+        </div>
+        <div class="card-body bg-light d-flex justify-content-center">
+            <div class="row w-100">
+                <!--4'er sıralı ürünler-->
+                @foreach(var product in Model.Products)
+                {
+                    <div class="mt-2 mb-2 col-lg-3 d-flex justify-content-center align-items-center">
+                        <div class="productBox shadow-sm">
+                            @if (product.Discount > 0)
+                            {
+                                <div style="position:absolute; padding:2px 6px 2px 6px; border-radius:5px;text-decoration-line:line-through" class="bg-danger text-white">
+                                    @product.Price,00₺
+                                    @{
+                                        price = Convert.ToInt32(product.Price - product.Price * product.Discount / 100);
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                price = product.Price;
+                            }
+                            <div class="productBox-header">
+                                <div class="productBox-mosaic">
+                                    <a href="@Url.Action("ProductDetails","Home",new { id = product.ProductID})" class="btn btn-primary text-light">Detaylar</a>
+                                </div>
+                                <img src="~/images/products/@product.Picture" width="210" height="240" />
+                            </div>
+                            <div class="dropdown-divider" style="margin:0!important"></div>
+                            <div class="productBox-container">
+                                <div class="productBox-name font-weight-bold" style="font-size:14px">
+                                    @product.Name
+                                </div>
+                                <div class="productBox-bottom">
+                                    <div class="productBox-price">
+                                        <span class="productBox-priceINT">@price</span><span class="productBox-priceFLOAT">,00₺</span>
+                                    </div>
+                                    <div class="productBox-quantity text-muted">
+                                        <i class="fas fa-box"></i> @product.Quantity
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

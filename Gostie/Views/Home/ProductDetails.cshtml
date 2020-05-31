@@ -1,0 +1,222 @@
+﻿@model Gostie.Models.Home.ProductDetailsViewModel
+@{
+    ViewData["Title"] = "ProductDetails";
+    Layout = "_HomeLayout";
+    int price = 0;
+    int mainPrice = 0;
+}
+<div class="container">
+    <div class="card card-header p-5">
+        <div class="container-fliud">
+            @if (Model.Product.Discount > 0)
+            {
+                <div class="p-1 bg-danger text-white" style="width:100px; font-size:12px; border-radius:5px">
+                    İNDİRİMLİ ÜRÜN
+                </div>
+            }
+            <div class="wrapper row">
+                <div class="details col-md-6 mb-5">
+                    <h3 class="product-title">@Model.Product.Name</h3>
+                    <div class="rating">
+                        <div class="stars">
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                        </div>
+                        @if (Model.Product.Discount > 0)
+                        {
+                            <span style="font-size:14px; color:#808080;" class="review-no">
+                                (indirimsiz fiyat : @Model.Product.Price₺)
+                                @{
+                                    mainPrice = Convert.ToInt32(Model.Product.Price - Model.Product.Price * Model.Product.Discount / 100);
+                                }
+                            </span><br />
+                        }
+                        else
+                        {
+                            <div>
+                                @{
+                                    mainPrice = Model.Product.Price;
+                                }
+                            </div>
+                        }
+                        <span class="review-no">(@Model.Product.Quantity Adet)</span>
+                    </div>
+                    <p class="product-description">@Model.Product.Description</p>
+                    <h4 class="price">Fiyat : <span>@mainPrice,00₺</span></h4>
+                    @if (@Model.Product.Quantity == 0)
+                    {
+                        <div class="action">
+                            <input type="hidden" name="id" value="@Model.Product.ProductID" />
+                            <button class="add-to-cart btn btn-danger disabled" type="submit">Stokta ürün yok</button>
+                        </div>
+                    }
+                    else
+                    {
+                        <form method="post" asp-action="AddToBasket" asp-controller="User" class="action">
+                            <input type="hidden" name="id" value="@Model.Product.ProductID" />
+                            <button class="add-to-cart btn btn-default" type="submit">Sepete ekle</button>
+                        </form>
+                    }
+                </div>
+                <div class="preview col-md-6">
+                    <div class="float-right">
+                        <div><img src="~/images/products/@Model.Product.Picture" style="width:300px; height:300px" /></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="newestHeader pl-5 pr-5">
+        <div class="newestText border-bottom text-center">
+            <h1 class="text-warning">Benzer Ürünler</h1>
+        </div>
+    </div>
+    <div id="newestCarouselControls" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner pl-5 pr-5">
+            <!---->
+            @{
+                int rowCount = Model.SimiliarProducts.Count / 4;
+                if (rowCount == 0 && Model.SimiliarProducts.Count % 4 != 0)
+                    rowCount = 1;
+                int columnCount = 0;
+            }
+            @for (int i = 0; i < Model.SimiliarProducts.Count; i += 4)
+            {
+                @if (i + 4 > Model.SimiliarProducts.Count)
+                {
+                    columnCount = Model.SimiliarProducts.Count % 4;
+                }
+                else
+                {
+                    columnCount = 4;
+                }
+                @if (i == 0)
+                {
+                    <div class="carousel-item active">
+                        <div class="row w-100">
+                            @for (int j = i; j < i + columnCount; j++)
+                            {
+                                <div class="mt-2 mb-2 col-lg-3 d-flex justify-content-center align-items-center">
+                                    <div class="productBox shadow-sm">
+                                        @if (Model.SimiliarProducts[j].Discount > 0)
+                                        {
+                                        <div style="position:absolute; padding:2px 6px 2px 6px; border-radius:5px;text-decoration-line:line-through" class="bg-danger text-white">
+                                            @Model.SimiliarProducts[j].Price,00₺
+                                            @{
+                                                price = Convert.ToInt32(Model.SimiliarProducts[j].Price - Model.SimiliarProducts[j].Price * Model.SimiliarProducts[j].Discount / 100);
+                                            }
+                                        </div>
+                                        }
+                                        else
+                                        {
+                                            price = Model.SimiliarProducts[j].Price;
+                                        }
+                                        <div class="productBox-header">
+                                            <div class="productBox-mosaic">
+                                                <a href="@Url.Action("ProductDetails","Home",new {id = @Model.SimiliarProducts[j].ProductID})" class="btn btn-primary text-light">Detaylar</a>
+                                            </div>
+                                            <img src="~/images/products/@Model.SimiliarProducts[j].Picture" width="210" height="240" />
+                                        </div>
+                                        <div class="dropdown-divider" style="margin:0!important"></div>
+                                        <div class="productBox-container">
+                                            <div class="productBox-name font-weight-bold text-center" style="font-size:14px">
+                                                @Model.SimiliarProducts[j].Name;
+                                            </div>
+                                            <div class="productBox-bottom">
+                                                <div class="productBox-price">
+                                                    <span class="productBox-priceINT">@price</span><span class="productBox-priceFLOAT">,00₺</span>
+                                                </div>
+                                                <div class="productBox-quantity text-muted">
+                                                    <i class="fas fa-box"></i> @Model.SimiliarProducts[j].Quantity
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="carousel-item">
+                        <div class="row w-100">
+                            @for (int j = i; j < i + columnCount; j++)
+                            {
+                                <div class="mt-2 mb-2 col-lg-3 d-flex justify-content-center align-items-center">
+                                    <div class="productBox shadow-sm">
+                                        @if (Model.SimiliarProducts[j].Discount > 0)
+                                        {
+                                            <div style="position:absolute; padding:2px 6px 2px 6px; border-radius:5px;text-decoration-line:line-through" class="bg-danger text-white">
+                                                @Model.SimiliarProducts[j].Price,00₺
+                                                @{
+                                                    price = Convert.ToInt32(Model.SimiliarProducts[j].Price - Model.SimiliarProducts[j].Price * Model.SimiliarProducts[j].Discount / 100);
+                                                }
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            price = Model.SimiliarProducts[j].Price;
+                                        }
+                                        <div class="productBox-header">
+                                            <div class="productBox-mosaic">
+                                                <a href="@Url.Action("ProductDetails","Home",new {id = @Model.SimiliarProducts[j].ProductID})" class="btn btn-primary text-light">Detaylar</a>
+                                            </div>
+                                            <img src="~/images/products/@Model.SimiliarProducts[j].Picture" width="210" height="240" />
+                                        </div>
+                                        <div class="dropdown-divider" style="margin:0!important"></div>
+                                        <div class="productBox-container">
+                                            <div class="productBox-name font-weight-bold text-center" style="font-size:14px">
+                                                @Model.SimiliarProducts[j].Name;
+                                            </div>
+                                            <div class="productBox-bottom">
+                                                <div class="productBox-price">
+                                                    <span class="productBox-priceINT">@price</span><span class="productBox-priceFLOAT">,00₺</span>
+                                                </div>
+                                                <div class="productBox-quantity text-muted">
+                                                    <i class="fas fa-box"></i> @Model.SimiliarProducts[j].Quantity
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        <a class="carousel-control-prev" href="#newestCarouselControls" role="button" data-slide="prev">
+            <i class="fas fa-angle-left text-warning" style="font-size:50px" aria-hidden="true"></i>
+        </a>
+        <a class="carousel-control-next" href="#newestCarouselControls" role="button" data-slide="next">
+            <i class="fas fa-angle-right text-warning" style="font-size:50px" aria-hidden="true"></i>
+        </a>
+    </div>
+</div>
+
+
+<div class="container d-flex justify-content-center mt-5">
+    <div class="row">
+        <div class="col-lg-12">
+            <h5>Yorumlarını yazın</h5>
+        </div>
+        <div class="col-lg-12 mt-3 mb-3">
+            <textarea rows="4" placeholder="Açıklamanız.." class="form-control">
+
+            </textarea>
+        </div>
+        <div class="col-lg-12">
+            <button class="btn btn-warning text-light float-right">
+                Gönder
+            </button>
+        </div>
+    </div>
+</div>

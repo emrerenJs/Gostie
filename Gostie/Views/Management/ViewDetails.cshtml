@@ -1,0 +1,61 @@
+﻿@model Gostie.Models.Panel.ProductUpdateModel
+@{
+    ViewData["Title"] = "ViewDetails";
+    Layout = "_PanelLayout";
+}
+<div class="container">
+    <div class="card text-center">
+        <div class="card-body">
+            <h5 class="card-title">Ürün Güncelle</h5>
+            <div class="row justify-content-center">
+                <form asp-controller="Management" asp-action="UpdateProduct" method="post" enctype="multipart/form-data">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Ürün ismi:</label>
+                            <input type="hidden" value="@Model.product.ProductID" asp-for="product.ProductID" />
+                            <input class="form-control" type="text" asp-for="product.Name" placeholder="Halter.." />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Stok adedi:</label>
+                            <input class="form-control" type="text" asp-for="product.Quantity" placeholder="10.." />
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Fiyat ₺:</label>
+                            <input class="form-control" type="text" asp-for="product.Price" placeholder="100" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>İndirim(%): </label>
+                            <input class="form-control" type="text" asp-for="product.Discount" placeholder="0-100" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label> Kategori: </label>
+                        <select class="form-control" asp-for="product.Category.CategoryID" asp-items="Model.Categories"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Resim:</label><br />
+                        <img src="~/images/products/@Model.product.Picture" id="PreviewUpdatedImage" width="200" height="200" /><br /><br />
+                        <input class="form-control" type="file" id="ProductUpdatedImage" name="ProductUpdatedImage" />
+                    </div>
+                    <div class="form-group">
+                        <label>Açıklama:</label>
+                        <textarea rows="3" class="form-control" asp-for="product.Description" placeholder="Ürün hakkında birşeyler.."></textarea>
+                    </div>
+                    @if (ViewBag.error != "")
+                    {
+                        <div class="form-group">
+                            <label>@ViewBag.error</label>
+                        </div>
+                    }
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                </form>
+            </div>
+            <form method="post" asp-action="DeleteProduct" asp-controller="Management">
+                <input type="hidden" asp-for="product.ProductID" value="@Model.product.ProductID" />
+                <button type="submit" class="btn btn-danger mt-2">&nbsp&nbspSil&nbsp&nbsp</button>
+            </form>
+        </div>
+    </div>
+</div>

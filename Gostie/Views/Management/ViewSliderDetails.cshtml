@@ -1,0 +1,41 @@
+﻿@model Gostie.Entities.Slider
+@{
+    ViewData["Title"] = "ViewSliderDetails";
+    Layout = "_PanelLayout";
+}
+
+<div class="container">
+    <div class="card text-center">
+        <div class="card-header">
+            <h1>Yeni Slider</h1>
+        </div>
+        <div class="card-body" id="UpdateSliderCard">
+            <h5 class="card-title">Yeni Slider</h5>
+            <form asp-controller="Management" asp-action="UpdateSlider" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <input type="hidden" asp-for="SliderID" value="@Model.SliderID" />
+                    <label>Resim:</label><br />
+                    <img src="~/images/sliders/@Model.SliderImage" id="PreviewImage" width="620" height="250" /><br /><br />
+                </div>
+                <div class="row justify-content-center">
+                    <div style="width:500px">
+                        <input class="form-control" type="file" id="ProductImage" name="SliderUpdateImage" />
+                        <div class="form-group">
+                            <label>Slider başlığı:</label>
+                            <input class="form-control" type="text" asp-for="SliderHeader" placeholder="Günlük kampanya.." />
+                        </div>
+                        <div class="form-group">
+                            <label>Açıklama:</label>
+                            <textarea rows="3" class="form-control" asp-for="SliderDescription" placeholder="Kampanyamız hakkında bilgi.."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" />Kaydet</button>
+                    </div>
+                </div>
+            </form>
+            <form method="post" asp-action="DeleteSlider" asp-controller="Management">
+                <input type="hidden" name="id" value="@Model.SliderID" />
+                <button type="submit" class="btn btn-danger mt-2">&nbsp&nbspSil&nbsp&nbsp</button>
+            </form>
+        </div>
+    </div>
+</div>

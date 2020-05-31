@@ -1,0 +1,57 @@
+﻿@model Gostie.Models.Panel.SalesViewModel
+@{
+    ViewData["Title"] = "Sales";
+    Layout = "_PanelLayout";
+}
+    <div class="container">
+        <div class="card text-center">
+            <div class="card-header">
+                <h1>Siparişler</h1>
+            </div>
+            <div class="card-body">
+                <div class="row w-100 justify-content-center">
+                    @foreach (var item in Model.SalesInformationModels)
+                    {
+                        <div class="col-lg-4 border p-3 m-3">
+                            <div class="row">
+                                <div class="col-lg-6 font-weight-bold">
+                                    Sipariş Numarası :
+                                </div>
+                                <div clsas="col-lg-6">
+                                    @item.Order.OrderID
+                                </div>
+                                <div class="col-lg-6 font-weight-bold">
+                                    Sipariş Durumu :
+                                </div>
+                                <div clsas="col-lg-6">
+                                    @item.Status.Status
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 font-weight-bold">
+                                    Sipariş Tarihi :
+                                </div>
+                                <div clsas="col-lg-6">
+                                    @item.Order.OrderDate
+                                </div>
+                                <div class="col-lg-6 font-weight-bold">
+                                    Sipariş Veren :
+                                </div>
+                                <div clsas="col-lg-6">
+                                    @item.Customer.FirstName @item.Customer.LastName
+                                </div>
+                            </div>
+                            <div class="row">
+                                <form method="post" asp-action="SaleDetails" asp-controller="Management" class="col-lg-6 font-weight-bold">
+                                    <input type="hidden" value="@item.Order.OrderID" name="orderid" />
+                                    <button class="btn btn-primary mt-2">
+                                        Detaylara Gir
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>

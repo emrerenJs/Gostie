@@ -1,0 +1,41 @@
+﻿* {
+    font-family: 'Roboto', sans-serif;
+}
+hr{
+    margin:0px;
+    padding:0px;
+    height:0px;
+}
+.login-layout{
+    width:100%;
+    display:flex;
+    justify-content:center;
+}
+.login-page {
+    margin-top: 50px;
+    width: 400px;
+    min-height: 470px;
+    border-radius: 30px;
+}
+.login-header {
+    width: 100%;
+    min-height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.login-container{
+    padding:20px 50px 0px 50px;
+    width:100%;
+    min-height:280px;
+}
+.login-footer {
+    width: 100%;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+

@@ -1,0 +1,154 @@
+﻿@model Gostie.Models.User.OrderDetailsViewModel 
+@{
+    ViewData["Title"] = "OrderDetails";
+    Layout = "_UserLayout";
+    int totalPrice = 0;
+    int productPrice = 0;
+    int q = 0;
+    int w = 0;
+}
+
+<div class="container">
+    <div class="card text-center">
+        <div class="card-header">
+            <h1>Sipariş Detayları</h1>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-12 mb-4">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="row">
+                                <div class="col-lg-6 font-weight-bold">
+                                    Alıcı :
+                                </div>
+                                <div class="col-lg-6">
+                                    @Model.Customer.FirstName @Model.Customer.LastName.ToUpper()
+                                </div>
+                                <div class="col-lg-6 font-weight-bold">
+                                    Durum :
+                                </div>
+                                <div class="col-lg-6">
+                                    @Model.Status.Status
+                                </div>
+                                <div class="col-lg-6 font-weight-bold">
+                                    Sipariş Tarihi :
+                                </div>
+                                <div class="col-lg-6">
+                                    @Model.Order.OrderDate
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="row">
+                                <div class="col-lg-12 font-weight-bold">
+                                    Adres 1:
+                                </div>
+                                <div class="col-lg-12">
+                                    @Model.Customer.Adress1
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="font-weight-bold">
+                                        Toplam Fiyat:
+                                    </div>
+                                    <div>
+                                        @foreach (var item in Model.Products)
+                                        {
+                                            int price = 0;
+                                            if (item.Discount > 0)
+                                                price = Convert.ToInt32(item.Price - item.Price * item.Discount / 100);
+                                            else
+                                                price = item.Price;
+                                            totalPrice += price * Model.Ordereds[w].Count;
+                                            w++;
+                                        }
+                                        @totalPrice₺
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @foreach (var item in Model.Products)
+                {
+                    <div class="col-lg-12 mb-3 border">
+                        <div class="row align-items-center">
+                            <div class="col-lg-4">
+                                <img src="~/images/products/@item.Picture" width="150" height="150"/>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="row">
+                                    <div class="col-lg-6 font-weight-bold border">
+                                        Ürün:
+                                    </div>
+                                    <div class="col-lg-6 border-bottom">
+                                        @item.Name
+                                    </div>
+                                    <div class="col-lg-6 font-weight-bold border">
+                                        Açıklama:
+                                    </div>
+                                    <div class="col-lg-6 border-bottom">
+                                        @item.Description
+                                    </div>
+                                    <div class="col-lg-6 font-weight-bold border">
+                                        Fiyat:
+                                    </div>
+                                    <div class="col-lg-6 border-bottom">
+                                        @if (item.Discount > 0)
+                                        {
+                                            <div style="text-decoration-line:line-through; float:left">
+                                                @item.Price₺
+                                            </div>
+                                            <div>
+                                                @Convert.ToInt32(item.Price - item.Price * item.Discount / 100)₺
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div>
+                                                @item.Price₺
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="col-lg-6 font-weight-bold border">
+                                        Adet:
+                                    </div>
+                                    <div class="col-lg-6 border-bottom">
+                                        @Model.Ordereds[q].Count
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @{q++;}
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-danger" data-toggle="modal" data-target="#complaintModal">
+                Şikayet Oluştur
+            </button>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="complaintModal" tabindex="-1" role="dialog" aria-labelledby="complaintModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form class="modal-content" asp-action="MakeComplaint" asp-controller="User">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Şikayet</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="form modal-body">
+                <input type="hidden" name="orderid" value="@Model.Order.OrderID"/>
+                <input type="text" class="form-control" name="complaintHeader" placeholder="Başlık.."/>
+                <textarea name="complaint" class="form-control" rows="3">
+                </textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Oluştur</button>
+            </div>
+        </form>
+    </div>
+</div>

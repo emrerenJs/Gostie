@@ -1,0 +1,157 @@
+﻿@model Gostie.Models.Panel.IndexPageModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "_PanelLayout";
+}
+<!--Navigation Options-->
+
+<div class="container">
+    <div class="card text-center">
+        <div class="card-header">
+            <h1>MENÜ DÜZENİ</h1>
+        </div>
+        <div class="card-body">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto d-flex justify-content-center">
+                        @foreach (var item in Model.NavigationViewModel)
+                        {
+                            <li class="nav-item dropdown mr-2">
+                                <form asp-action="DeleteNavItem" method="post" asp-controller="Management">
+                                    <input type="hidden" name="id" value="@item.NavItem.NavItemID" />
+                                    <button type="submit">
+                                        <i class="fas fa-window-close"></i>
+                                    </button>
+                                </form>
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    @item.NavItem.NavItemText
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    @foreach (var itemBlock in item.NavCategories)
+                                    {
+                                        <form asp-action="DeleteNavCategory" method="post" asp-controller="Management">
+                                            <input type="hidden" name="navid" value="@item.NavItem.NavItemID" />
+                                            <input type="hidden" name="catid" value="@itemBlock.CategoryID" />
+                                            <button type="submit">
+                                                <i class="fas fa-window-close"></i>
+                                            </button>
+                                        </form>
+                                        <a class="dropdown-item" href="#">@itemBlock.CategoryName</a>
+                                    }
+                                </div>
+                            </li>
+                        }
+                        <li class="nav-item">
+                            <button class="btn btn-success" data-toggle="modal" data-target="#AddNewNavbarItemModal">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+</div>
+<!--Slider Options-->
+<div class="container">
+    <div class="card text-center">
+        <div class="card-header">
+            <h1>SLİDER DÜZENİ</h1>
+            <a class="btn btn-primary" href="@Url.Action("AddSlider","Management")">
+                Yeni Slider
+            </a>
+        </div>
+        <div class="card-body">
+            <div>
+                <!--Burası Header-->
+            </div>
+            <div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Başlık</th>
+                            <th scope="col">Açıklama</th>
+                            <th scope="col">Resim</th>
+                            <th scope="col">Düzenle/Sil</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Sliders)
+                        {
+                            <tr>
+                                <th scope="row">@item.SliderID</th>
+                                <td>@item.SliderHeader</td>
+                                <td>@item.SliderDescription</td>
+                                <td>
+                                    <img src="~/images/sliders/@item.SliderImage" width="125" height="50"/>
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("ViewSliderDetails","Management",new { id = @item.SliderID })">Detaylar</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--MODALS-->
+<form method="post" asp-action="AddNavItem" asp-controller="Management" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="AddNewNavbarItemModal" aria-labelledby="AddNewNavbarItemModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <h5>Yeni Katalog</h5>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <input type="text" name="katalog" class="form-control" placeholder="Katalog.."/>
+                </div>
+                <div class="form-row">
+                <select name="Categories[]" id="selectCat" multiple="multiple" class="form-control" asp-items="Model.Categories">
+
+                </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form method="post" asp-action="AddNavCategories" asp-controller="Management" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="AddNewNavbarCategoryModal" aria-labelledby="AddNewNavbarCategoryModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content andds">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <h5>Kategori ekle</h5>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <select name="CategoryID" id="selectCat" class="form-control" asp-items="Model.Categories">
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</form>
+

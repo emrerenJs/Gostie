@@ -1,0 +1,44 @@
+﻿@model Gostie.Models.User.RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+    Layout = "_UserLayout";
+}
+<div class="login-layout">
+    <div class="login-page shadow">
+        <div class="login-header">
+            <h3>Hoş Geldiniz!</h3>
+        </div>
+        <hr />
+        <div class="login-container pb-4">
+            <form method="post" asp-action="Register" asp-controller="User">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Kullanıcı Adı</label>
+                    <input type="text" class="form-control" asp-for="UserName" id="r-username" placeholder="Kullanıcı Adı">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Parola</label>
+                    <input type="password" class="form-control" asp-for="Password" id="r-password" placeholder="Parola">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Parola(Doğrulama)</label>
+                    <input type="password" class="form-control" asp-for="ConfirmPassword" id="r-password-again" placeholder="Parola">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">E-Posta Adresi</label>
+                    <input type="email" class="form-control" id="r-email" asp-for="Email" placeholder="Email@mail.com">
+                </div>
+                <div class="form-group">
+                    <div asp-validation-summary="ModelOnly"></div>
+                </div>
+                <button type="submit" class="btn btn-primary">Kayıt Ol</button>
+            </form>
+        </div>
+        <hr />
+        <div class="login-footer">
+            <div class="login-buttons">
+                <a href="@Url.Action("Login","User")" class="btn btn-outline-primary text-primary">Giriş Yap</a>
+            </div>
+        </div>
+    </div>
+</div>
+
